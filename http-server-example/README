@@ -1,0 +1,17 @@
+Use make to compile the HTTP request reply once server.
+
+$ make
+
+
+== HTTP reply once server ==
+
+Start reply once server then use an HTTP client (such as wget) to request a
+resource and then receive a reply. You may also use a GUI browser. The server
+URL should be http://localhost:28282.
+
+# on one console
+$ ./http_reply_once
+
+# on the second console
+$ wget http://localhost:28282
+
