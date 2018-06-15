@@ -9,13 +9,14 @@ DIR="$1"
 REPO="git://xenbits.xen.org/unikraft"
 LIBS=(\
 	newlib
+        lwip
 )
 APPS=(\
 	helloworld
 )
 
-entry_dir() { pushd $1 &>/dev/null }
-exit_dir()  { popd &>/dev/null     }
+entry_dir() { pushd $1 &>/dev/null; }
+exit_dir()  { popd &>/dev/null;     }
 
 mkdir -p $DIR
 entry_dir $DIR
@@ -40,4 +41,3 @@ done
 exit_dir
 
 exit_dir
-
