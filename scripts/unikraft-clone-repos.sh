@@ -10,9 +10,10 @@ XEN_REPO_ROOT="git://xenbits.xen.org/unikraft"
 GITHUB_REPO_ROOT="https://github.com/nets-cs-pub-ro"
 USE_GITHUB=1
 
+UNIKRAFT_BRANCH=hackathon
 LIBS=(\
-	newlib
-        lwip
+	"newlib hackathon"
+        "lwip hackathon"
 )
 APPS=(\
 	helloworld
@@ -30,28 +31,44 @@ get_repo_root() {
 get_repo_lib() {
 	local libname="$1"
 	[ $USE_GITHUB -eq 1 ] \
-		&& echo "$GITHUB_REPO_ROOT/unikraft-lib-$libname.git" \
-		|| echo "$XEN_REPO_ROOT/libs/$libname.git"
+		&& echo "unikraft-lib-$libname" \
+		|| echo "libs/$libname"
+}
+
+clone_and_checkout() {
+	local reponame="$1"
+	local branchname="$2"
+	local foldername="$3"
+	git clone "$(get_repo_root)/$reponame.git" && \
+		entry_dir $reponame && \
+		git checkout $branchname && \
+		exit_dir
+		mv $reponame $foldername
 }
 
 mkdir -p $DIR
 entry_dir $DIR
 
 # Clone kernel
-[ ! -d  "$DIR/unikraft" ] && git clone "$(get_repo_root)/unikraft.git"
+[ ! -d  "$DIR/unikraft" ] && \
+	clone_and_checkout "unikraft" $UNIKRAFT_BRANCH "unikraft"
 
 # Clone libs
 mkdir -p "libs"
 entry_dir "libs"
-for l in ${LIBS[@]}; do
-	[ ! -d  "$DIR/libs/$l" ] && git clone "$(get_repo_lib $l)" $l
+
+for ((i = 0; i < ${#LIBS[@]}; i++)); do
+	read libname libbranch < <(echo ${LIBS[$i]});
+	[ ! -d  "$DIR/libs/$libname" ] && \
+		clone_and_checkout "$(get_repo_lib $libname)" $libbranch $libname
 done
 exit_dir
 
 # Clone apps
 mkdir -p "apps"
 entry_dir "apps"
-for a in ${APPS[@]}; do
+for ((i = 0; i < ${#APPS[@]}; i++)); do
+	a=${APPS[$i]}
 	[ ! -d  "$DIR/apps/$a" ] && git clone "$XEN_REPO_ROOT/apps/$a.git"
 done
 exit_dir
