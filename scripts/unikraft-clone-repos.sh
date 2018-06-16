@@ -10,10 +10,12 @@ XEN_REPO_ROOT="git://xenbits.xen.org/unikraft"
 GITHUB_REPO_ROOT="https://github.com/nets-cs-pub-ro"
 USE_GITHUB=1
 
-UNIKRAFT_BRANCH=hackathon
+BRANCH=staging
+
+UNIKRAFT_BRANCH=$BRANCH
 LIBS=(\
-	"newlib hackathon"
-        "lwip hackathon"
+	"newlib $BRANCH"
+        "lwip $BRANCH"
 )
 APPS=(\
 	helloworld
@@ -39,19 +41,20 @@ clone_and_checkout() {
 	local reponame="$1"
 	local branchname="$2"
 	local foldername="$3"
-	git clone "$(get_repo_root)/$reponame.git" && \
-		entry_dir $reponame && \
+	[ ! -d $foldername ] && \
+		git clone "$(get_repo_root)/$reponame.git" && \
+		mv $reponame $foldername
+
+	entry_dir $foldername && \
 		git checkout $branchname && \
 		exit_dir
-		mv $reponame $foldername
 }
 
 mkdir -p $DIR
 entry_dir $DIR
 
 # Clone kernel
-[ ! -d  "$DIR/unikraft" ] && \
-	clone_and_checkout "unikraft" $UNIKRAFT_BRANCH "unikraft"
+clone_and_checkout "unikraft" $UNIKRAFT_BRANCH "unikraft"
 
 # Clone libs
 mkdir -p "libs"
@@ -59,8 +62,7 @@ entry_dir "libs"
 
 for ((i = 0; i < ${#LIBS[@]}; i++)); do
 	read libname libbranch < <(echo ${LIBS[$i]});
-	[ ! -d  "$DIR/libs/$libname" ] && \
-		clone_and_checkout "$(get_repo_lib $libname)" $libbranch $libname
+	clone_and_checkout "$(get_repo_lib $libname)" $libbranch $libname
 done
 exit_dir
 
