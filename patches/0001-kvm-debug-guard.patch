@@ -1,0 +1,15 @@
+diff --git a/main.c b/main.c
+index 44dd1a7..5fdd4bd 100644
+--- a/main.c
++++ b/main.c
+@@ -5,6 +5,10 @@
+ 
+ int main(int argc, char *argv[])
+ {
++	int guard = 1;
++
++	while (guard);
++
+ 	printf("Hello world!\n");
+ 
+ #if APPHELLOWORLD_PRINTARGS
