@@ -7,7 +7,7 @@ fi
 
 DIR="$1"
 XEN_REPO_ROOT="git://xenbits.xen.org/unikraft"
-GITHUB_REPO_ROOT="https://github.com/nets-cs-pub-ro"
+GITHUB_REPO_ROOT="https://github.com/unikraft"
 USE_GITHUB=1
 
 BRANCH=staging
