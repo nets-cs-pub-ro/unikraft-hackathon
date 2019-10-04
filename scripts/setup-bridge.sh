@@ -6,34 +6,12 @@ bridge_create() {
 	ip link set $BRIDGE up
 }
 
-bridge_add() {
-	brctl addif $BRIDGE $PIPE_END_GUEST
-}
-
 bridge_delete() {
-	ip link delete $PIPE_END_HOST
 	ip link delete $BRIDGE
-}
-
-pipe_create() {
-	ip link add $PIPE_END_HOST type veth peer name $PIPE_END_GUEST
-}
-
-pipe_up() {
-	ip link set $PIPE_END_GUEST up
-	ip link set $PIPE_END_HOST up
-	ip address add $GATEWAY_IP dev $PIPE_END_HOST
-}
-
-pipe_setup() {
-	pipe_create
-	pipe_up
 }
 
 do_start() {
 	bridge_create
-	pipe_setup
-	bridge_add
 }
 
 do_stop() {
