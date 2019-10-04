@@ -1,19 +1,19 @@
 #!/bin/bash
 
-source config.sh
+SCRIPT_DIR="$(dirname $0)"
+source "$SCRIPT_DIR/config.sh"
 
-PKG_NAME=isc-dhcp-server
 NETWORK=10.0.0.0
 START_IP=10.0.0.5
 END_IP=10.0.0.100
 BCAST=10.0.0.255
 NETMASK=255.255.255.0
 
-INTERFACE_FILE=/etc/default/isc-dhcp-server
-CONFIG_FILE=/etc/dhcp/dhcpd.conf
+INTERFACE_FILE="/etc/default/isc-dhcp-server"
+CONFIG_FILE="/etc/dhcp/dhcpd.conf"
 
 INTERFACE_CONFIG="
-INTERFACESv4=\"$PIPE_END_HOST\"
+INTERFACESv4=\"$BRIDGE\"
 INTERFACESv6=\"\"
 "
 
@@ -25,8 +25,8 @@ subnet $NETWORK netmask $NETMASK {
 }
 "
 
-echo -n "Installing $PKG_NAME..."
-apt-get install $PKG_NAME -y &> /dev/null
+echo -n "Installing $DHCP_SERVER..."
+apt-get install $DHCP_SERVER -y &> /dev/null
 echo "Done"
 
 echo -n "Setting up config files..."
@@ -35,6 +35,6 @@ echo $CONFIG_APPEND >> $CONFIG_FILE
 echo "Done"
 
 echo "Starting DHCP server on interface $PIPE_END_HOST"
-/etc/init.d/$PKG_NAME start &> /dev/null
+systemctl start $DHCP_SERVER
+systemctl status $DHCP_SERVER
 
-/etc/init.d/$PKG_NAME status

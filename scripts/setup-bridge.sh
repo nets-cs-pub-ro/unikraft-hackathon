@@ -4,6 +4,7 @@ bridge_create() {
 	brctl addbr $BRIDGE
 	brctl setageing $BRIDGE $((60 * 60 * 24))
 	ip link set $BRIDGE up
+	ip a a $GATEWAY_IP dev $BRIDGE
 }
 
 bridge_delete() {
@@ -12,6 +13,8 @@ bridge_delete() {
 
 do_start() {
 	bridge_create
+	systemctl status $DHCP_SERVER &>/dev/null && \
+		systemctl restart $DHCP_SERVER
 }
 
 do_stop() {
@@ -34,9 +37,6 @@ case $1 in
 	;;
 "stop")
 	do_stop
-	;;
-"pipe-up")
-	pipe_up
 	;;
 *)
 	echo "Invalid param"

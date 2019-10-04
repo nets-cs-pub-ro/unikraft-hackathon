@@ -42,8 +42,7 @@ clone_and_checkout() {
 	local branchname="$2"
 	local foldername="$3"
 	[ ! -d $foldername ] && \
-		git clone "$(get_repo_root)/$reponame.git" && \
-		#mv $reponame $foldername
+		git clone "$(get_repo_root)/$reponame.git"
 
 	entry_dir $foldername && \
 		git checkout $branchname && \
