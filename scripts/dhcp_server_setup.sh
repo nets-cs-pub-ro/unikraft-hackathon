@@ -26,7 +26,7 @@ subnet $NETWORK netmask $NETMASK {
 "
 
 echo -n "Installing $PKG_NAME..."
-apt-get install $PKG_NAME &> /dev/null
+apt-get install $PKG_NAME -y &> /dev/null
 echo "Done"
 
 echo -n "Setting up config files..."
