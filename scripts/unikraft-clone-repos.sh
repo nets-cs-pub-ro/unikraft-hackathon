@@ -33,7 +33,7 @@ get_repo_root() {
 get_repo_lib() {
 	local libname="$1"
 	[ $USE_GITHUB -eq 1 ] \
-		&& echo "unikraft-lib-$libname" \
+		&& echo "$libname" \
 		|| echo "libs/$libname"
 }
 
@@ -43,7 +43,7 @@ clone_and_checkout() {
 	local foldername="$3"
 	[ ! -d $foldername ] && \
 		git clone "$(get_repo_root)/$reponame.git" && \
-		mv $reponame $foldername
+		#mv $reponame $foldername
 
 	entry_dir $foldername && \
 		git checkout $branchname && \
